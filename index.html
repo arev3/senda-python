@@ -11286,7 +11286,10 @@ ICONOS.twitter = ICONOS.x;
 
 let sb = null, usuario = null, sincronizando = false, estadoNube = '', subirT = null, ultimoSubido = '';
 if (configurado){
-  sb = window.supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
+  // Acepta la URL aunque se haya copiado con /rest/v1/, espacios o barra final
+  const urlLimpia = String(CFG.SUPABASE_URL).trim().replace(/\/(rest|auth)\/v1.*$/i, '').replace(/\/+$/, '');
+  try { window.__sendaHost = new URL(urlLimpia).host; } catch (e) { window.__sendaHost = urlLimpia; }
+  sb = window.supabase.createClient(urlLimpia, String(CFG.SUPABASE_ANON_KEY).trim());
 }
 
 // ---------- traducción de errores ----------
@@ -11300,7 +11303,9 @@ function traducir(e){
     [/Unable to validate email|invalid format|is invalid/i, 'Ese correo no parece válido.'],
     [/rate limit|too many|security purposes/i, 'Demasiados intentos seguidos. Espera un minuto y vuelve a probar.'],
     [/provider is not enabled|Unsupported provider/i, 'Ese método de acceso todavía no está activado en el servidor.'],
-    [/Failed to fetch|NetworkError|Load failed/i, 'No hay conexión con el servidor. Revisa tu internet.'],
+    [/Failed to fetch|NetworkError|Load failed/i, 'No se pudo conectar con ' + (window.__sendaHost || 'Supabase') + '. Revisa que SUPABASE_URL en config.js esté bien escrita y que el proyecto de Supabase no esté pausado.'],
+    [/Invalid path specified/i, 'La dirección de Supabase en config.js no es correcta. Debe ser solo https://xxxx.supabase.co, sin /rest/v1/ al final.'],
+    [/Invalid API key|No API key/i, 'La clave de Supabase en config.js no es correcta. Copia de nuevo la clave anon o publishable.'],
     [/New password should be different/i, 'La nueva contraseña debe ser distinta de la anterior.']
   ];
   for (const [re, es] of t){ const mm = m.match(re); if (mm) return es.replace('$1', mm[1] || ''); }
