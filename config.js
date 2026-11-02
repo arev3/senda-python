@@ -5,7 +5,7 @@
 // 3. Pégalas aquí abajo. La clave anon es pública: está pensada para ir en la web.
 //    NUNCA pongas aquí la clave "service_role" / "secret".
 window.SENDA_CONFIG = {
-  SUPABASE_URL: "https://vlzxxcrprwspcdjhrdsh.supabase.co",
+  SUPABASE_URL: "https://vlzxxcrprwspcdjhdrsh.supabase.co",
   SUPABASE_ANON_KEY: "sb_publishable_Zqm1Z8L0FMknelJFFUMiPQ_ZcNixnDQ",
 
   // Botones de acceso social que se muestran. Quita los que no actives en Supabase.
